@@ -1,18 +1,56 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <div class="header">
+      <h4>Categories</h4>
+      <nav>
+        <ul>
+          <li v-for="category in categories" :key="category.name">
+            <a href="#" @click="selectCategory(category)">{{ category.name }}</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+// import Header from './components/Header.vue'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
-  }
+
+  },
+  data() {
+    return {
+      URL: 'https://opentdb.com/api.php?amount=10&category=',
+      categories: [
+        { name: 'Any', id: '' },
+        { name: 'Film', id: 11 },
+        { name: 'History', id: 23 },
+        { name: 'Animals', id: 27 },
+      ],
+      questions: []
+    }
+  },
+  methods: {
+    selectCategory: function (category) {
+      console.log(`Selected category ${category.name}(${category.id})`)
+      this.URL += category.id
+      this.fetchQuestions()
+    },
+    fetchQuestions: function() {
+      fetch(this.URL, { method: 'GET' })
+        .then(data => data.json())
+        .then(response => {
+          this.questions = response.results;
+        })
+        .catch(error => {
+          console.log(error)
+          // TODO Display error in a error box
+        })
+    }
+  },
 }
 </script>
 
