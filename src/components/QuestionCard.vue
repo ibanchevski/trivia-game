@@ -11,6 +11,7 @@
             </div>
         </div>
         <button @click="next">Next</button>
+        <button @click="submitAnswers" style="float: right; font-size: 16px;">Submit</button>
     </div>
 </template>
 
@@ -24,6 +25,7 @@ export default {
     props: {
         currentQuestion: Object,
         nextQuestion: Function,
+        submitAnswers: Function,
     },
     methods: {
         next: function() {
@@ -31,12 +33,15 @@ export default {
             this.nextQuestion()
         },
         selectAnswer: function(index) {
-            console.log('selected answer', index)
+            if (this.selectedAnswerIndex === index) {
+                return;
+            }
+
             this.selectedAnswerIndex = index
             if (this.answers[index] === this.currentQuestion.correct_answer) {
                 this.$emit('correct-answer')
             }
-        }
+        },
     },
     computed: {
         answers() {
@@ -56,6 +61,10 @@ export default {
     margin: 9px auto;
     padding: 12px;
     max-width: 550px;
+}
+
+.question-card h3 {
+    text-align: center;
 }
 
 .answers-holder {

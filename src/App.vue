@@ -14,21 +14,31 @@
     <div class="no-q-alert" v-if="questions.length === 0">
       Select category to begin
     </div>
-    <QuestionCard
+    <QuestionCnt
       v-if="questions.length !== 0"
+      :totalQuestions="questions.length"
+      :currentQuestion="currIndex + 1" />
+    <QuestionCard
+      v-if="questions.length !== 0 && hideQuestions === false"
       :currentQuestion="questions[currIndex]"
       :nextQuestion="nextQuestion"
-      v-on:correct-answer="onCorrectAnswer"/>
+      v-on:correct-answer="onCorrectAnswer"
+      :submitAnswers="submitAnswers"/>
+
+    <div class="resultbox" v-if="hideQuestions === true">
+      You have {{ correctAnswers }} correct answers of {{ questions.length }} total!
+    </div>
   </div>
 </template>
 
 <script>
 import QuestionCard from './components/QuestionCard.vue'
-
+import QuestionCnt from './components/QuestionCnt.vue'
 export default {
   name: 'App',
   components: {
-    QuestionCard
+    QuestionCard,
+    QuestionCnt,
   },
   data() {
     return {
@@ -43,6 +53,7 @@ export default {
       loading: false,
       currIndex: 0,
       correctAnswers: 0,
+      hideQuestions: false,
     }
   },
   methods: {
@@ -75,6 +86,9 @@ export default {
     onCorrectAnswer: function() {
       this.correctAnswers++
       console.log('correct answer')
+    },
+    submitAnswers: function() {
+      this.hideQuestions = true
     }
   },
 }
@@ -88,6 +102,16 @@ export default {
   /* text-align: center; */
   color: #2c3e50;
   margin-top: 60px;
+}
+
+.no-q-alert {
+  background-color: #fffacd;
+  max-width: 500px;
+  margin: 9px auto;
+  padding: 24px;
+  border: 3px solid #f0e68c;
+  border-radius: 6px;
+  text-align: center;
 }
 
 .cat-nav {
